@@ -2,11 +2,13 @@
 
 const postsContainer = document.getElementById('posts');
 const tagsContainer = document.getElementById('tags');
+const aside = document.getElementsByTagName('aside')[0];
 const searchInput = document.getElementById('exampleFormControlInput1');
 let posts = [];
 let visiblePostsNumber = 10;
 let selectedTags = [];
 let sortingByDate = 'desc';
+let isPostsButtonVisible = false;
 
 const filterPostsByTag = (visiblePosts) => {
     return visiblePosts
@@ -37,7 +39,7 @@ const disableTags = () => {
     selectedTags.forEach((tag) => {
         document.getElementById(tag).classList.remove('selected');
     });
-    
+
     selectedTags = [];
 };
 
@@ -150,14 +152,38 @@ const showTags = () => {
     }
 };
 
-const onScroll = () => {
+const showPostsButton = () => {
+    const button = document.createElement('button');
+
+    button.className = 'btn btn-dark';
+    button.id = 'posts-button';
+    button.innerHTML = 'Show only 10 posts on page';
+
+    button.setAttribute('onclick', 'showLessPosts()');
+
+    aside.appendChild(button);
+
+    isPostsButtonVisible = true;
+};
+
+const hidePostsButton = () => {
+    const button = document.getElementById('posts-button');
+
+    button.remove();
+};
+
+const onScroll = (event) => {
     const MIN_OFFSET = 300;
-    const scrollBottom = document.documentElement.offsetHeight - (document.documentElement.clientHeight + document.documentElement.scrollTop);
+    const scrollBottom = event.target.scrollHeight - event.target.scrollTop - event.target.offsetHeight;
 
     if (scrollBottom <= MIN_OFFSET) {
         visiblePostsNumber += 10;
 
         showPosts();
+
+        if (!isPostsButtonVisible) {
+            showPostsButton();
+        }
     }
 };
 
@@ -191,6 +217,15 @@ const deletePost = (id) => {
     }
 
     showPosts();
+};
+
+const showLessPosts = () => {
+    visiblePostsNumber = 10;
+    isPostsButtonVisible = false;
+
+    hidePostsButton();
+    showPosts();
+    postsContainer.scrollTo(0, 0);
 };
 
 const checkSavedSorting = () => {
@@ -229,13 +264,11 @@ const init = () => {
                 };
             });
 
-            console.log(posts);
-
             showPosts();
             showTags();
         });
 
-    document.addEventListener('scroll', onScroll);
+    postsContainer.addEventListener('scroll', onScroll);
     searchInput.addEventListener('change', showPosts);
     searchInput.addEventListener('keyup', showPosts);
 };

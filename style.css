@@ -5,10 +5,25 @@
 
 body {
     display: flex;
-    justify-content: space-between;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
+
+main {
+    flex: 1 1 80%;
+    position: relative;
+}
+
 .posts {
-    margin: 0 auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: auto;
 }
 
 .post {
