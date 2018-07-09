@@ -60,22 +60,19 @@ const switchSortByDate = () => {
 
     if (sortingByDate === 'desc') {
         sortingByDate = 'asc';
+
         iconElement.classList.remove('fa-sort-numeric-down');
         iconElement.classList.add('fa-sort-numeric-up');
-
-        showPosts();
     } else {
         sortingByDate = 'desc';
+
         iconElement.classList.remove('fa-sort-numeric-up');
         iconElement.classList.add('fa-sort-numeric-down');
-
-        showPosts();
-
     }
 
-    window.localStorage.setItem('sortingByDate', sortingByDate);
-
     disableTags();
+    showPosts();
+    window.localStorage.setItem('sorting', JSON.stringify({byDate: sortingByDate}));
 };
 
 const findMatches = (wordToMatch, posts) => {
@@ -88,11 +85,10 @@ const findMatches = (wordToMatch, posts) => {
 const showPosts = () => {
     let visiblePosts = posts;
 
-    visiblePosts = sortPostsByDate(visiblePosts);
-
-
     if (selectedTags.length > 0) {
         visiblePosts = filterPostsByTag(visiblePosts);
+    } else {
+        visiblePosts = sortPostsByDate(visiblePosts);
     }
 
     if (searchInput.value.length > 0) {
@@ -103,7 +99,7 @@ const showPosts = () => {
         .slice(0, visiblePostsNumber)
         .map((post) => {
             const tags = post.tags
-                .map(tag => `<div class="tag">${tag}</div>`)
+                .map(tag => `<div class="tag">#${tag}</div>`)
                 .join('');
             const time = moment(post.createdAt).format("dddd, MMMM Do YYYY, h:mm a");
 
@@ -143,9 +139,14 @@ const showTags = () => {
         });
     });
 
-    html = tags.map(tag => `<div id="${tag}" class="tag" onclick="selectTag('${tag}')">${tag}</div>`).join('');
-
+    html = tags.map(tag => `<div id="${tag}" class="tag" onclick="selectTag('${tag}')">#${tag}</div>`).join('');
     tagsContainer.innerHTML = html;
+
+    if (selectedTags.length > 0) {
+        selectedTags.forEach((tag) => {
+            document.getElementById(tag).classList.add('selected');
+        });
+    }
 };
 
 const onScroll = () => {
@@ -159,7 +160,31 @@ const onScroll = () => {
     }
 };
 
+const checkSavedSorting = () => {
+    const savedSorting = window.localStorage.getItem('sorting');
+
+    if (savedSorting) {
+        const sorting = JSON.parse(savedSorting);
+
+        if (sorting.byDate) {
+            sortingByDate = sorting.byDate;
+
+            const iconElement = document.getElementById('sortIcon');
+
+            if (sortingByDate === 'desc') {
+                iconElement.classList.add('fa-sort-numeric-down');
+            } else {
+                iconElement.classList.add('fa-sort-numeric-up');
+            }
+        } else if (sorting.byTags) {
+            selectedTags = sorting.byTags;
+        }
+    }
+};
+
 const init = () => {
+    checkSavedSorting();
+
     fetch('https://api.myjson.com/bins/152f9j')
         .then(blob => blob.json())
         .then((data) => {
@@ -185,7 +210,11 @@ const selectTag = (tag) => {
         element.classList.add('selected');
     }
 
-    visiblePostsNumber = 10;
+    if (selectedTags.length > 0) {
+        window.localStorage.setItem('sorting', JSON.stringify({byTags: selectedTags}));
+    } else {
+        window.localStorage.setItem('sorting', JSON.stringify({byDate: sortingByDate}));
+    }
 
     showPosts();
 };
