@@ -3,48 +3,46 @@
 const postsContainer = document.getElementById('posts');
 const tagsContainer = document.getElementById('tags');
 const posts = [];
+const searchInput = document.getElementById('exampleFormControlInput1');
 let visiblePostsNumber = 10;
 let selectedTags = [];
-const searchInput = document.getElementById('exampleFormControlInput1');
 let sortingByDate = 'desc';
 
+const filterPostsByTag = (visiblePosts) => {
+    return visiblePosts
+        .map((post) => {
+            let matchingTagsNumber = 0;
 
+            selectedTags.forEach((tag) => {
+                if (post.tags.includes(tag)) {
+                    matchingTagsNumber++;
+                }
+            });
 
-// const filterPostsByTag = (visiblePosts) => {
-//     return visiblePosts
-//         .map((post) => {
-//             let matchingTagsNumber = 0;
+            return {
+                ...post,
+                matchingTagsNumber,
+            };
+        })
+        .sort((postOne, postTwo) => {
+            if (postOne.matchingTagsNumber > postTwo.matchingTagsNumber) return -1;
+            if (postOne.matchingTagsNumber < postTwo.matchingTagsNumber) return 1;
 
-//             selectedTags.forEach((tag) => {
-//                 if (post.tags.includes(tag)) {
-//                     matchingTagsNumber++;
-//                 }
-//             });
-
-//             return {
-//                 ...post,
-//                 matchingTagsNumber,
-//             };
-//         })
-//         .sort((postOne, postTwo) => {
-//             if (postOne.matchingTagsNumber > postTwo.matchingTagsNumber) return -1;
-//             if (postOne.matchingTagsNumber < postTwo.matchingTagsNumber) return 1;
-//             return 0;
-//         });
-// };
+            if(postOne.createdAt > postTwo.createdAt) return -1;
+            if(postOne.createdAt < postTwo.createdAt) return 1;
+        });
+};
 
 const sortPostsByDate = (posts) => {
     if (sortingByDate === 'desc') {
         return posts.sort((postOne, postTwo) => {
             if (postOne.createdAt > postTwo.createdAt) return -1;
             if (postOne.createdAt < postTwo.createdAt) return 1;
-            return 0;
         });
     } else {
         return posts.sort((postOne, postTwo) => {
             if (postOne.createdAt > postTwo.createdAt) return 1;
             if (postOne.createdAt < postTwo.createdAt) return -1;
-            return 0;
         });
     }
 
@@ -65,18 +63,10 @@ const switchSortByDate = () => {
         iconElement.classList.add('fa-sort-numeric-down');
 
         showPosts();
+
     }
-};
 
-const filterPostsByTag = (visiblePosts) => {
-    // let postsByMatchingTag = {
-    //     '3': [],
-    //     '2': [],
-    //     '1': [],
-    //     '0': [],
-    // };
-
-    let postsByMatchingTag = {};
+    window.localStorage.setItem('sortingByDate', sortingByDate);
 };
 
 const findMatches = (wordToMatch, posts) => {
@@ -90,6 +80,7 @@ const showPosts = () => {
     let visiblePosts = posts;
 
     visiblePosts = sortPostsByDate(visiblePosts);
+
 
     if (selectedTags.length > 0) {
         visiblePosts = filterPostsByTag(visiblePosts);
@@ -108,10 +99,10 @@ const showPosts = () => {
             const time = moment(post.createdAt).format("dddd, MMMM Do YYYY, h:mm a");
 
             return `
-                <div class="post">
+                <div class="post" id="${posts.indexOf(post)}">
                     <div class="post-left">
                         <img class="post-image" src="${post.image}"/>
-                        <button type="button" class="btn btn-danger">Delete post</button>
+                        <button type="button" class="btn btn-danger" onclick="">Delete post</button>
                     </div>
                     <div class="post-content">
                         <div class="post-title">${post.title}</div>
@@ -189,6 +180,7 @@ const selectTag = (tag) => {
 
     showPosts();
 };
+
 
 searchInput.addEventListener('change', showPosts);
 searchInput.addEventListener('keyup', showPosts);

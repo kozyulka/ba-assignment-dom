@@ -1,6 +1,6 @@
 :root {
-    --bright: rgb(244, 67, 54);
-    --dark-grey: rgb(71, 71, 71);
+    --bright:#FFC107;
+
 }
 
 body {
@@ -12,10 +12,13 @@ body {
 
 .post {
     text-align: center;
-    border: 1px solid black;
+    border-radius: 10px;
     margin: 15px;
     display: flex;
     align-items: center;
+    min-height: 220px;
+    background-color: #dcdcdc;
+    padding: 10px;
 }
 
 .post-image {
@@ -30,7 +33,7 @@ body {
 }
 
 .post-description {
-    color: var(--dark-grey);
+    color: #3e3e3e;
     margin: 5px;
 }
 
@@ -39,7 +42,8 @@ body {
 }
 
 .post-upload-date {
-    color: grey;
+    color: #dc3545;
+    font-weight: 600;
 }
 
 .post-tags-container {
@@ -49,17 +53,31 @@ body {
     flex-wrap: wrap;
 }
 
+.post-left .btn {
+    margin-top: 10px;
+}
+
+aside .btn {
+    position: relative;
+    bottom: 5px;
+}
+
+aside .form-inline {
+    margin-top: 15px;
+}
+
 .tag {
     border-radius: 3px;
     background-color: var(--bright);
     color: white;
     padding: 5px;
-    margin: 5px;
     white-space: nowrap;
+    cursor: pointer;
+    margin: 7px;
 }
 
 .tag.selected {
-    background-color: green;
+    box-shadow: 0px 0px 4px 5px #fb6969;
 }
 
 .general-tags-container {
