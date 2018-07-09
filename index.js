@@ -2,8 +2,8 @@
 
 const postsContainer = document.getElementById('posts');
 const tagsContainer = document.getElementById('tags');
-const posts = [];
 const searchInput = document.getElementById('exampleFormControlInput1');
+let posts = [];
 let visiblePostsNumber = 10;
 let selectedTags = [];
 let sortingByDate = 'desc';
@@ -188,7 +188,13 @@ const init = () => {
     fetch('https://api.myjson.com/bins/152f9j')
         .then(blob => blob.json())
         .then((data) => {
-            posts.push(...data.data);
+            posts = data.data.map((post) => {
+                return {
+                    ...post,
+                    createdAt: moment(post.createdAt).valueOf(),
+                };
+            });
+
             showPosts();
             showTags();
         });
