@@ -104,10 +104,10 @@ const showPosts = () => {
             const time = moment(post.createdAt).format("dddd, MMMM Do YYYY, h:mm a");
 
             return `
-                <div class="post" id="${posts.indexOf(post)}">
+                <div class="post">
                     <div class="post-left">
                         <img class="post-image" src="${post.image}"/>
-                        <button type="button" class="btn btn-danger" onclick="">Delete post</button>
+                        <button type="button" class="btn btn-danger" onclick="deletePost(${post.id})">Delete post</button>
                     </div>
                     <div class="post-content">
                         <div class="post-title">${post.title}</div>
@@ -188,12 +188,15 @@ const init = () => {
     fetch('https://api.myjson.com/bins/152f9j')
         .then(blob => blob.json())
         .then((data) => {
-            posts = data.data.map((post) => {
+            posts = data.data.map((post, index) => {
                 return {
                     ...post,
                     createdAt: moment(post.createdAt).valueOf(),
+                    id: index,
                 };
             });
+
+            console.log(posts);
 
             showPosts();
             showTags();
@@ -225,6 +228,16 @@ const selectTag = (tag) => {
     showPosts();
 };
 
+const deletePost = (id) => {
+    for (let index = 0; index < posts.length; index++) {
+        if (posts[index].id === id) {
+            posts.splice(index, 1);
+            break;
+        }
+    }
+
+    showPosts();
+};
 
 searchInput.addEventListener('change', showPosts);
 searchInput.addEventListener('keyup', showPosts);
