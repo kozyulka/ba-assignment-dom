@@ -73,17 +73,19 @@ const showPosts = () => {
 
             return `
                 <div class="post">
-                    <button type="button" class="btn btn-danger">Delete</button>
-                    <div class="post-title">${post.title}</div>
-                    <div class="post-description">${post.description}</div>
-                    <div class="post-image-container">
+                    <div class="post-left">
                         <img class="post-image" src="${post.image}"/>
+                        <button type="button" class="btn btn-danger">Delete post</button>
                     </div>
-                    <div class="post-upload">
-                        <span class="post-upload-date">${time}</span>
-                    </div>
-                    <div class="post-tags-container">
-                        ${tags}
+                    <div class="post-content">
+                        <div class="post-title">${post.title}</div>
+                        <div class="post-description">${post.description}</div>
+                        <div class="post-upload">
+                            <span class="post-upload-date">Date: ${time}</span>
+                        </div>
+                        <div class="post-tags-container">
+                            ${tags}
+                        </div>
                     </div>
                 </div>
             `;
