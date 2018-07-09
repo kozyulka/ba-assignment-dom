@@ -37,6 +37,7 @@ const disableTags = () => {
     selectedTags.forEach((tag) => {
         document.getElementById(tag).classList.remove('selected');
     });
+    
     selectedTags = [];
 };
 
@@ -160,6 +161,38 @@ const onScroll = () => {
     }
 };
 
+const selectTag = (tag) => {
+    const element = document.getElementById(tag);
+
+    if (selectedTags.includes(tag)) {
+        selectedTags = selectedTags.filter(selectedTag => selectedTag !== tag);
+
+        element.classList.remove('selected');
+    } else {
+        selectedTags.push(tag);
+        element.classList.add('selected');
+    }
+
+    if (selectedTags.length > 0) {
+        window.localStorage.setItem('sorting', JSON.stringify({byTags: selectedTags}));
+    } else {
+        window.localStorage.setItem('sorting', JSON.stringify({byDate: sortingByDate}));
+    }
+
+    showPosts();
+};
+
+const deletePost = (id) => {
+    for (let index = 0; index < posts.length; index++) {
+        if (posts[index].id === id) {
+            posts.splice(index, 1);
+            break;
+        }
+    }
+
+    showPosts();
+};
+
 const checkSavedSorting = () => {
     const savedSorting = window.localStorage.getItem('sorting');
 
@@ -203,41 +236,8 @@ const init = () => {
         });
 
     document.addEventListener('scroll', onScroll);
+    searchInput.addEventListener('change', showPosts);
+    searchInput.addEventListener('keyup', showPosts);
 };
 
 init();
-
-const selectTag = (tag) => {
-    const element = document.getElementById(tag);
-
-    if (selectedTags.includes(tag)) {
-        selectedTags = selectedTags.filter(selectedTag => selectedTag !== tag);
-
-        element.classList.remove('selected');
-    } else {
-        selectedTags.push(tag);
-        element.classList.add('selected');
-    }
-
-    if (selectedTags.length > 0) {
-        window.localStorage.setItem('sorting', JSON.stringify({byTags: selectedTags}));
-    } else {
-        window.localStorage.setItem('sorting', JSON.stringify({byDate: sortingByDate}));
-    }
-
-    showPosts();
-};
-
-const deletePost = (id) => {
-    for (let index = 0; index < posts.length; index++) {
-        if (posts[index].id === id) {
-            posts.splice(index, 1);
-            break;
-        }
-    }
-
-    showPosts();
-};
-
-searchInput.addEventListener('change', showPosts);
-searchInput.addEventListener('keyup', showPosts);
