@@ -55,7 +55,6 @@ const sortPostsByDate = (posts) => {
             if (postOne.createdAt < postTwo.createdAt) return -1;
         });
     }
-
 };
 
 const switchSortByDate = () => {
@@ -79,8 +78,9 @@ const switchSortByDate = () => {
 };
 
 const findMatches = (wordToMatch, posts) => {
-    return posts.filter(post => {
+    return posts.filter((post) => {
         const regexp = new RegExp(wordToMatch, 'gi');
+
         return post.title.match(regexp);
     });
 };
@@ -212,6 +212,7 @@ const deletePost = (id) => {
     for (let index = 0; index < posts.length; index++) {
         if (posts[index].id === id) {
             posts.splice(index, 1);
+
             break;
         }
     }
