@@ -5,6 +5,9 @@ const tagsContainer = document.getElementById('tags');
 const posts = [];
 let visiblePostsNumber = 10;
 let selectedTags = [];
+const searchInput = document.getElementById('exampleFormControlInput1');
+
+
 
 // const filterPostsByTag = (visiblePosts) => {
 //     return visiblePosts
@@ -41,11 +44,23 @@ const filterPostsByTagAndDate = (visiblePosts) => {
     // 1. split
 };
 
+const findMatches = (wordToMatch, posts) => {
+    return posts.filter(post => {
+        const regexp = new RegExp(wordToMatch, 'gi');
+        return post.title.match(regexp);
+    });
+};
+
 const showPosts = () => {
     let visiblePosts = posts;
 
+
     if (selectedTags.length > 0) {
         visiblePosts = filterPostsByTagAndDate(visiblePosts);
+    }
+
+    if (searchInput.value.length > 0) {
+        visiblePosts = findMatches(searchInput.value, visiblePosts);;
     }
 
     const html = visiblePosts
@@ -136,3 +151,6 @@ const selectTag = (tag) => {
 
     showPosts();
 };
+
+searchInput.addEventListener('change', showPosts);
+searchInput.addEventListener('keyup', showPosts);
