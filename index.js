@@ -9,6 +9,7 @@ let visiblePostsNumber = 10;
 let selectedTags = [];
 let sortingByDate = 'desc';
 let isPostsButtonVisible = false;
+let canScroll = true;
 
 const filterPostsByTag = (visiblePosts) => {
     return visiblePosts
@@ -176,10 +177,14 @@ const onScroll = (event) => {
     const MIN_OFFSET = 300;
     const scrollBottom = event.target.scrollHeight - event.target.scrollTop - event.target.offsetHeight;
 
-    if (scrollBottom <= MIN_OFFSET) {
+    if (canScroll && scrollBottom <= MIN_OFFSET) {
         visiblePostsNumber += 10;
 
         showPosts();
+
+        if (visiblePostsNumber > posts.length) {
+            canScroll = false;
+        }
 
         if (!isPostsButtonVisible) {
             showPostsButton();
