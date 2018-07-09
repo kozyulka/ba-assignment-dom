@@ -33,6 +33,13 @@ const filterPostsByTag = (visiblePosts) => {
         });
 };
 
+const disableTags = () => {
+    selectedTags.forEach((tag) => {
+        document.getElementById(tag).classList.remove('selected');
+    });
+    selectedTags = [];
+};
+
 const sortPostsByDate = (posts) => {
     if (sortingByDate === 'desc') {
         return posts.sort((postOne, postTwo) => {
@@ -67,6 +74,8 @@ const switchSortByDate = () => {
     }
 
     window.localStorage.setItem('sortingByDate', sortingByDate);
+
+    disableTags();
 };
 
 const findMatches = (wordToMatch, posts) => {

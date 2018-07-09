@@ -57,9 +57,13 @@ body {
     margin-top: 10px;
 }
 
-aside .btn {
+aside #sortButton {
     position: relative;
     bottom: 5px;
+}
+
+aside .btn-dark {
+    margin: 25px;
 }
 
 aside .form-inline {
