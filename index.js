@@ -6,6 +6,7 @@ const posts = [];
 let visiblePostsNumber = 10;
 let selectedTags = [];
 const searchInput = document.getElementById('exampleFormControlInput1');
+let sortingByDate = 'desc';
 
 
 
@@ -32,16 +33,48 @@ const searchInput = document.getElementById('exampleFormControlInput1');
 //         });
 // };
 
-const filterPostsByTagAndDate = (visiblePosts) => {
+const sortPostsByDate = (posts) => {
+    if (sortingByDate === 'desc') {
+        return posts.sort((postOne, postTwo) => {
+            if (postOne.createdAt > postTwo.createdAt) return -1;
+            if (postOne.createdAt < postTwo.createdAt) return 1;
+            return 0;
+        });
+    } else {
+        return posts.sort((postOne, postTwo) => {
+            if (postOne.createdAt > postTwo.createdAt) return 1;
+            if (postOne.createdAt < postTwo.createdAt) return -1;
+            return 0;
+        });
+    }
+
+};
+
+const switchSortByDate = () => {
+    const iconElement = document.getElementById('sortIcon');
+
+    if (sortingByDate === 'desc') {
+        sortingByDate = 'asc';
+        iconElement.classList.remove('fa-sort-numeric-down');
+        iconElement.classList.add('fa-sort-numeric-up');
+
+        showPosts();
+    } else {
+        sortingByDate = 'desc';
+        iconElement.classList.remove('fa-sort-numeric-up');
+        iconElement.classList.add('fa-sort-numeric-down');
+
+        showPosts();
+    }
+};
+
+const filterPostsByTag = (visiblePosts) => {
     // let postsByMatchingTag = {
     //     '3': [],
     //     '2': [],
     //     '1': [],
     //     '0': [],
     // };
-
-    // TODO:
-    // 1. split
 };
 
 const findMatches = (wordToMatch, posts) => {
@@ -54,6 +87,7 @@ const findMatches = (wordToMatch, posts) => {
 const showPosts = () => {
     let visiblePosts = posts;
 
+    visiblePosts = sortPostsByDate(visiblePosts);
 
     if (selectedTags.length > 0) {
         visiblePosts = filterPostsByTagAndDate(visiblePosts);
