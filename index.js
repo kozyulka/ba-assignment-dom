@@ -75,6 +75,8 @@ const filterPostsByTag = (visiblePosts) => {
     //     '1': [],
     //     '0': [],
     // };
+
+    let postsByMatchingTag = {};
 };
 
 const findMatches = (wordToMatch, posts) => {
@@ -90,7 +92,7 @@ const showPosts = () => {
     visiblePosts = sortPostsByDate(visiblePosts);
 
     if (selectedTags.length > 0) {
-        visiblePosts = filterPostsByTagAndDate(visiblePosts);
+        visiblePosts = filterPostsByTag(visiblePosts);
     }
 
     if (searchInput.value.length > 0) {
